@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F3F5F8">
+<title>היום · ניהול משימות</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               "Segoe UI", Roboto, sans-serif;
+  background: #F3F5F8;
+  color: #1F2D3D;
+  padding: max(16px, env(safe-area-inset-top)) 16px
+          max(16px, env(safe-area-inset-bottom)) 16px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+header.day { margin-bottom: 20px; }
+.date { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+.updated { color: #6B7A8F; font-size: 13px; }
+
+.card {
+  background: #FFFFFF;
+  border: 1px solid #E1E8ED;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-size: 13px;
+  color: #6B7A8F;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: none;
+}
+
+.bar-row {
+  display: flex; align-items: center; gap: 10px; margin: 10px 0;
+}
+.bar-cat { font-weight: 600; min-width: 48px; }
+.bar-track {
+  flex: 1; height: 14px; background: #EEF2F7; border-radius: 7px; overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 7px; transition: width .3s; }
+.bar-text { min-width: 54px; text-align: left; color: #6B7A8F; font-size: 13px; }
+
+.slot {
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  background: #F7FAFD;
+  border-radius: 10px;
+  border-right: 5px solid #E1E8ED;
+}
+.slot:last-child { margin-bottom: 0; }
+.slot.work { background: #F7FAFD; border-right-color: #4A90E2; }
+.slot.personal { background: #FCF7F2; border-right-color: #E8A87C; }
+.slot.done { opacity: 0.55; background: #EDE9FE; border-right-color: #7C3AED; }
+.slot.overdue { background: #FEF3C7; border-right-color: #D97706; }
+
+.slot-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slot-name { font-weight: 700; font-size: 17px; }
+.slot-hours { color: #6B7A8F; font-size: 14px; white-space: nowrap; }
+.slot-meta { color: #6B7A8F; font-size: 13px; margin-top: 4px; }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 600; color: white;
+}
+.badge.work { background: #4A90E2; }
+.badge.personal { background: #E8A87C; }
+.status-done { color: #7C3AED; font-weight: 600; }
+.status-overdue { color: #D97706; font-weight: 600; }
+
+.empty { text-align: center; color: #6B7A8F; padding: 24px 0; }
+
+footer { text-align: center; color: #6B7A8F; font-size: 11px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<header class="day">
+  <h1 class="date">יום רביעי · 3 יוני 2026</h1>
+  <div class="updated">עודכן: 00:57 · 03/06/2026</div>
+</header>
+
+<section class="card">
+  <div class="section-title">קיבולת היום</div>
+  
+    <div class="bar-row">
+      <span class="bar-cat">אישי</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 0.0%; background: #E8A87C;"></div>
+      </div>
+      <span class="bar-text">0/2ש</span>
+    </div>
+    
+</section>
+
+<section class="card">
+  <div class="section-title">להיום</div>
+  <div class="empty">אין משימות משובצות להיום</div>
+</section>
+
+
+
+<footer>נוצר ע"י Task Manager · משוך מטה לרענון</footer>
+</body>
+</html>
