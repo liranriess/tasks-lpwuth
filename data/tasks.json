@@ -1,0 +1,68 @@
+[
+  {
+    "id": "5f40763af634",
+    "name": "לשלוח אימייל לחברת השירות של מכונת הכביסה",
+    "category": "personal",
+    "estimated_hours": 0.2,
+    "work_unit_hours": 0.5,
+    "end_date": "2026-06-08",
+    "created_at": "2026-06-03T21:29:40",
+    "updated_at": "2026-06-03T21:29:40",
+    "deleted": false
+  },
+  {
+    "id": "7082b84c4ceb",
+    "name": "לפרסם פוסט מנדיי בלינקדאין PMI",
+    "category": "personal",
+    "estimated_hours": 0.1,
+    "work_unit_hours": 0.3,
+    "end_date": "2026-06-07",
+    "created_at": "2026-06-07T01:04:11",
+    "updated_at": "2026-06-07T01:04:11",
+    "deleted": false
+  },
+  {
+    "id": "e5f14974f96d",
+    "name": "לוודא ולסגור חובות דירה בחיפה - ארנונה-חשמל-גז",
+    "category": "personal",
+    "estimated_hours": 2.0,
+    "work_unit_hours": 0.5,
+    "end_date": "2026-06-12",
+    "created_at": "2026-06-07T01:01:28",
+    "updated_at": "2026-06-07T01:01:28",
+    "deleted": false
+  },
+  {
+    "id": "ea167e0b8e34",
+    "name": "לסגור דייט ליום הנישואין ליום שני בערב",
+    "category": "personal",
+    "estimated_hours": 0.2,
+    "work_unit_hours": 0.5,
+    "end_date": "2026-06-08",
+    "created_at": "2026-06-07T00:55:56",
+    "updated_at": "2026-06-07T00:55:56",
+    "deleted": false
+  },
+  {
+    "id": "eb77978beb59",
+    "name": "לעבור את הקורסים של PMI",
+    "category": "personal",
+    "estimated_hours": 1.0,
+    "work_unit_hours": 0.5,
+    "end_date": "2026-06-09",
+    "created_at": "2026-06-03T01:08:23",
+    "updated_at": "2026-06-03T01:08:23",
+    "deleted": false
+  },
+  {
+    "id": "ec182deec313",
+    "name": "להשיג אישורי בט\"ל נכות",
+    "category": "personal",
+    "estimated_hours": 1.0,
+    "work_unit_hours": 0.5,
+    "end_date": "2026-06-12",
+    "created_at": "2026-06-03T01:04:29",
+    "updated_at": "2026-06-03T01:04:29",
+    "deleted": false
+  }
+]
