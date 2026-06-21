@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F3F5F8">
+<title>ניהול משימות</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               "Segoe UI", Roboto, sans-serif;
+  background: #F3F5F8; color: #1F2D3D;
+  font-size: 16px; line-height: 1.4;
+  padding: max(14px, env(safe-area-inset-top)) 14px
+           calc(80px + env(safe-area-inset-bottom)) 14px;
+}
+h1, h2, h3 { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
+
+/* header */
+header.day { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-start; }
+.date { font-size: 21px; font-weight: 700; }
+.updated { color: #6B7A8F; font-size: 12px; margin-top: 2px; }
+.icon-btn {
+  border: 1px solid #E1E8ED; background: #fff; border-radius: 10px;
+  width: 40px; height: 40px; font-size: 18px; color: #1F2D3D;
+}
+
+/* cards */
+.card {
+  background: #fff; border: 1px solid #E1E8ED; border-radius: 14px;
+  padding: 14px; margin-bottom: 14px;
+}
+.section-title { font-size: 13px; color: #6B7A8F; font-weight: 600; margin-bottom: 10px; }
+
+/* capacity bars */
+.bar-row { display: flex; align-items: center; gap: 10px; margin: 9px 0; }
+.bar-cat { font-weight: 600; min-width: 44px; }
+.bar-track { flex: 1; height: 13px; background: #EEF2F7; border-radius: 7px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 7px; transition: width .3s; }
+.bar-text { min-width: 56px; text-align: left; color: #6B7A8F; font-size: 12px; }
+
+/* slot / task rows */
+.row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 12px; margin-bottom: 8px;
+  background: #F7FAFD; border-radius: 10px; border-right: 5px solid #E1E8ED;
+}
+.row:last-child { margin-bottom: 0; }
+.row.work { background: #F7FAFD; border-right-color: #4A90E2; }
+.row.personal { background: #FCF7F2; border-right-color: #E8A87C; }
+.row.done { opacity: .55; background: #EDE9FE; border-right-color: #7C3AED; }
+.row.overdue { background: #FEF3C7; border-right-color: #D97706; }
+.row-main { flex: 1; min-width: 0; }
+.row-name { font-weight: 700; font-size: 16px; word-break: break-word; }
+.row-name.struck { text-decoration: line-through; }
+.row-meta { color: #6B7A8F; font-size: 12px; margin-top: 3px; }
+.badge { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 600; color: #fff; margin-left: 4px; }
+.badge.work { background: #4A90E2; }
+.badge.personal { background: #E8A87C; }
+
+.check {
+  flex: none; width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid #C3CEDA; background: #fff; font-size: 17px; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.check.on { background: #7C3AED; border-color: #7C3AED; }
+.mini {
+  flex: none; border: 1px solid #E1E8ED; background: #fff; border-radius: 8px;
+  width: 34px; height: 34px; font-size: 15px;
+}
+.mini.danger { color: #DC2626; }
+
+.empty { text-align: center; color: #6B7A8F; padding: 22px 0; }
+
+/* tabs */
+nav.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: flex; background: rgba(255,255,255,.95);
+  border-top: 1px solid #E1E8ED; backdrop-filter: blur(8px);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+nav.tabs button {
+  flex: 1; border: none; background: none; padding: 10px 0 8px;
+  color: #6B7A8F; font-size: 12px; display: flex; flex-direction: column;
+  align-items: center; gap: 2px;
+}
+nav.tabs button .ic { font-size: 20px; }
+nav.tabs button.active { color: #4A90E2; font-weight: 700; }
+
+/* FAB */
+.fab {
+  position: fixed; left: 18px; bottom: calc(76px + env(safe-area-inset-bottom));
+  width: 56px; height: 56px; border-radius: 50%; border: none;
+  background: #4A90E2; color: #fff; font-size: 30px; line-height: 1;
+  box-shadow: 0 6px 16px rgba(74,144,226,.45); z-index: 25;
+}
+
+/* filter chips */
+.chips { display: flex; gap: 8px; margin-bottom: 14px; }
+.chip {
+  flex: 1; padding: 8px 0; border-radius: 10px; border: 1px solid #E1E8ED;
+  background: #fff; color: #1F2D3D; font-size: 14px; font-weight: 600;
+}
+.chip.active { background: #4A90E2; border-color: #4A90E2; color: #fff; }
+
+/* modal */
+.modal-back {
+  position: fixed; inset: 0; background: rgba(15,23,42,.45); z-index: 40;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.modal {
+  background: #fff; width: 100%; max-width: 520px;
+  border-radius: 18px 18px 0 0; padding: 18px 16px
+    calc(18px + env(safe-area-inset-bottom));
+  max-height: 92vh; overflow-y: auto;
+}
+.modal h2 { font-size: 18px; margin-bottom: 14px; }
+label.fld { display: block; margin-bottom: 12px; font-size: 13px; color: #6B7A8F; font-weight: 600; }
+label.fld input, label.fld select {
+  display: block; width: 100%; margin-top: 5px; padding: 11px 12px;
+  border: 1px solid #D7DEE6; border-radius: 10px; font-size: 16px;
+  background: #fff; color: #1F2D3D;
+}
+.seg { display: flex; gap: 8px; margin-top: 5px; }
+.seg button {
+  flex: 1; padding: 11px 0; border-radius: 10px; border: 1px solid #D7DEE6;
+  background: #fff; color: #1F2D3D; font-size: 15px; font-weight: 600;
+}
+.seg button.on { background: #4A90E2; border-color: #4A90E2; color: #fff; }
+.actions { display: flex; gap: 10px; margin-top: 8px; }
+.btn {
+  flex: 1; padding: 13px 0; border-radius: 12px; border: none;
+  font-size: 16px; font-weight: 700;
+}
+.btn.primary { background: #4A90E2; color: #fff; }
+.btn.ghost { background: #EEF2F7; color: #1F2D3D; }
+.hint { font-size: 12px; color: #6B7A8F; line-height: 1.5; }
+.hint a { color: #4A90E2; }
+
+/* toast + banner */
+#toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(90px + env(safe-area-inset-bottom)); z-index: 60;
+  background: #1F2D3D; color: #fff; padding: 10px 16px; border-radius: 10px;
+  font-size: 14px; opacity: 0; transition: opacity .25s; pointer-events: none;
+  max-width: 90vw; text-align: center;
+}
+#toast.show { opacity: .96; }
+.banner {
+  background: #FEF3C7; border: 1px solid #FCD34D; color: #92400E;
+  border-radius: 12px; padding: 11px 13px; margin-bottom: 14px; font-size: 13px;
+}
+.banner b { display: block; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<header class="day">
+  <div>
+    <h1 class="date" id="date">—</h1>
+    <div class="updated" id="status">טוען…</div>
+  </div>
+  <button class="icon-btn" id="btn-settings" aria-label="הגדרות">⚙️</button>
+</header>
+
+<div id="view"></div>
+
+<button class="fab" id="fab" aria-label="הוסף משימה">+</button>
+
+<nav class="tabs">
+  <button data-tab="today" class="active"><span class="ic">📅</span>היום</button>
+  <button data-tab="tasks"><span class="ic">📋</span>משימות</button>
+</nav>
+
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+/* ---------- repo config (inferred from the Pages URL) ---------- */
+function detectRepo() {
+  // https://OWNER.github.io/REPO/...  -> {owner, repo}
+  const host = location.hostname;            // owner.github.io
+  const owner = host.split(".")[0];
+  const parts = location.pathname.split("/").filter(Boolean);
+  const repo = parts.length ? parts[0] : owner + ".github.io";
+  return { owner, repo, branch: "main" };
+}
+const REPO = detectRepo();
+const TASKS_PATH = "data/tasks.json";
+const SCHEDULE_PATH = "data/schedule.json";
+
+const WORK_CAP = 9.0, PERSONAL_CAP = 2.0;
+function dayCap(c) { return c === "work" ? WORK_CAP : PERSONAL_CAP; }
+function catLabel(c) { return c === "work" ? "עבודה" : "אישי"; }
+
+/* ---------- state ---------- */
+let TOKEN = localStorage.getItem("gh_token") || "";
+let FILTER = localStorage.getItem("filter") || "all";
+let TAB = "today";
+let tasks = [], slots = [];
+
+/* ---------- utils ---------- */
+const pad = (n) => String(n).padStart(2, "0");
+function nowIso() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}` +
+         `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+function todayIso() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function newId() {
+  const a = new Uint8Array(6);
+  crypto.getRandomValues(a);
+  return Array.from(a, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g,
+    (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
+function fmtNum(n) { return Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }); }
+const HE_DAYS = ["יום שני","יום שלישי","יום רביעי","יום חמישי","יום שישי","יום שבת","יום ראשון"];
+const HE_MON = ["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+function fmtLong(d) { return `${HE_DAYS[(d.getDay()+6)%7]} · ${d.getDate()} ${HE_MON[d.getMonth()]} ${d.getFullYear()}`; }
+
+let toastT = null;
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove("show"), 2200);
+}
+function setStatus(s) { document.getElementById("status").textContent = s; }
+
+/* ---------- GitHub data layer ---------- */
+function ghHeaders() {
+  return {
+    "Authorization": "Bearer " + TOKEN,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+}
+async function apiGet(path) {
+  const url = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}` +
+              `/contents/${path}?ref=${REPO.branch}&t=${Date.now()}`;
+  const r = await fetch(url, { headers: ghHeaders(), cache: "no-store" });
+  if (r.status === 404) return { data: [], sha: null };
+  if (!r.ok) throw new Error("read " + path + " HTTP " + r.status);
+  const j = await r.json();
+  const raw = decodeURIComponent(escape(atob(j.content.replace(/\n/g, ""))));
+  const data = raw.trim() ? JSON.parse(raw) : [];
+  return { data: Array.isArray(data) ? data : [], sha: j.sha };
+}
+async function rawGet(path) {
+  const url = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.repo}` +
+              `/${REPO.branch}/${path}?t=${Date.now()}`;
+  const r = await fetch(url, { cache: "no-store" });
+  if (r.status === 404) return [];
+  if (!r.ok) throw new Error("read " + path + " HTTP " + r.status);
+  const data = await r.json();
+  return Array.isArray(data) ? data : [];
+}
+async function apiPut(path, dataObj, sha, message) {
+  const body = {
+    message,
+    branch: REPO.branch,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(dataObj, null, 2)))),
+  };
+  if (sha) body.sha = sha;
+  const url = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/${path}`;
+  const r = await fetch(url, { method: "PUT", headers: ghHeaders(), body: JSON.stringify(body) });
+  if (r.status === 409 || r.status === 422) { const e = new Error("conflict"); e.conflict = true; throw e; }
+  if (!r.ok) throw new Error("write " + path + " HTTP " + r.status);
+  return r.json();
+}
+// Read latest, apply mutator(list)->newList, write. Retry on sha conflict.
+async function mutate(path, mutator, message) {
+  if (!TOKEN) { openSettings("צריך טוקן כדי לערוך. הדבק אותו כאן."); throw new Error("no token"); }
+  let lastErr;
+  for (let i = 0; i < 4; i++) {
+    const { data, sha } = await apiGet(path);
+    const next = mutator(JSON.parse(JSON.stringify(data)));
+    try { await apiPut(path, next, sha, message); return; }
+    catch (e) { if (e.conflict) { lastErr = e; continue; } throw e; }
+  }
+  throw lastErr || new Error("conflict");
+}
+
+/* ---------- load ---------- */
+async function loadAll() {
+  setStatus("טוען…");
+  try {
+    if (TOKEN) {
+      tasks = (await apiGet(TASKS_PATH)).data;
+      slots = (await apiGet(SCHEDULE_PATH)).data;
+    } else {
+      tasks = await rawGet(TASKS_PATH);
+      slots = await rawGet(SCHEDULE_PATH);
+    }
+    tasks = tasks.filter((t) => !t.deleted);
+    slots = slots.filter((s) => !s.deleted);
+    setStatus("עודכן " + new Date().toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" }) +
+              (TOKEN ? "" : " · צפייה בלבד"));
+  } catch (e) {
+    setStatus("שגיאת טעינה");
+    toast("טעינה נכשלה: " + e.message);
+  }
+  render();
+}
+
+/* ---------- mutations ---------- */
+async function toggleDone(slotId) {
+  try {
+    await mutate(SCHEDULE_PATH, (list) => {
+      for (const s of list) if (s.id === slotId) { s.completed = !s.completed; s.updated_at = nowIso(); }
+      return list;
+    }, "phone: toggle done");
+    toast("עודכן");
+    await loadAll();
+  } catch (e) { if (e.message !== "no token") toast("נכשל: " + e.message); }
+}
+async function saveTask(form, id) {
+  const rec = {
+    name: form.name.trim(),
+    category: form.category,
+    estimated_hours: Number(form.estimated_hours) || 1,
+    work_unit_hours: form.work_unit_hours ? Number(form.work_unit_hours) : null,
+    end_date: form.end_date || null,
+  };
+  try {
+    await mutate(TASKS_PATH, (list) => {
+      if (id) {
+        for (const t of list) if (t.id === id) Object.assign(t, rec, { updated_at: nowIso() });
+      } else {
+        list.push(Object.assign({
+          id: newId(), created_at: nowIso(), updated_at: nowIso(), deleted: false,
+        }, rec));
+      }
+      return list;
+    }, id ? "phone: edit task" : "phone: add task");
+    closeModal();
+    toast(id ? "המשימה עודכנה" : "המשימה נוספה");
+    await loadAll();
+  } catch (e) { if (e.message !== "no token") toast("נכשל: " + e.message); }
+}
+async function deleteTask(id) {
+  if (!confirm("למחוק את המשימה? (כולל השיבוצים שלה)")) return;
+  try {
+    await mutate(TASKS_PATH, (list) => {
+      for (const t of list) if (t.id === id) { t.deleted = true; t.updated_at = nowIso(); }
+      return list;
+    }, "phone: delete task");
+    await mutate(SCHEDULE_PATH, (list) => {
+      for (const s of list) if (s.task_id === id) { s.deleted = true; s.updated_at = nowIso(); }
+      return list;
+    }, "phone: delete task slots");
+    toast("נמחק");
+    await loadAll();
+  } catch (e) { if (e.message !== "no token") toast("נכשל: " + e.message); }
+}
+
+/* ---------- render ---------- */
+function matchesFilter(cat) {
+  return FILTER === "all" || FILTER === cat;
+}
+function taskById(id) { return tasks.find((t) => t.id === id); }
+
+function render() {
+  document.getElementById("date").textContent = fmtLong(new Date());
+  const v = document.getElementById("view");
+  v.innerHTML = TAB === "today" ? renderToday() : renderTasks();
+  document.getElementById("fab").style.display = TAB === "tasks" ? "block" : "none";
+}
+
+function renderToday() {
+  const today = todayIso();
+  const todays = [], overdue = [];
+  for (const s of slots) {
+    const t = taskById(s.task_id);
+    if (!t || !matchesFilter(t.category)) continue;
+    if (s.start_date === today) todays.push([s, t]);
+    else if (s.start_date < today && !s.completed) overdue.push([s, t]);
+  }
+  todays.sort((a, b) => (a[0].completed - b[0].completed) ||
+    ((a[1].category !== "work") - (b[1].category !== "work")) ||
+    a[1].name.localeCompare(b[1].name, "he"));
+  overdue.sort((a, b) => a[0].start_date.localeCompare(b[0].start_date));
+
+  const workUsed = todays.filter((x) => x[1].category === "work").reduce((s, x) => s + (+x[0].hours), 0);
+  const persUsed = todays.filter((x) => x[1].category === "personal").reduce((s, x) => s + (+x[0].hours), 0);
+
+  let bars = "";
+  if (FILTER === "all" || FILTER === "work") bars += barHtml("עבודה", workUsed, WORK_CAP, "#4A90E2");
+  if (FILTER === "all" || FILTER === "personal") bars += barHtml("אישי", persUsed, PERSONAL_CAP, "#E8A87C");
+
+  const todayRows = todays.length
+    ? todays.map(([s, t]) => slotRow(s, t, false)).join("")
+    : '<div class="empty">אין משימות משובצות להיום</div>';
+
+  let overdueCard = "";
+  if (overdue.length) {
+    overdueCard = `<section class="card"><div class="section-title">באיחור (${overdue.length})</div>` +
+      overdue.map(([s, t]) => slotRow(s, t, true)).join("") + `</section>`;
+  }
+
+  return filterChips() +
+    `<section class="card"><div class="section-title">קיבולת היום</div>${bars}</section>` +
+    `<section class="card"><div class="section-title">להיום</div>${todayRows}</section>` +
+    overdueCard +
+    (TOKEN ? "" : viewerBanner());
+}
+
+function renderTasks() {
+  const list = tasks.filter((t) => matchesFilter(t.category))
+    .sort((a, b) => ((a.category !== "work") - (b.category !== "work")) ||
+      a.name.localeCompare(b.name, "he"));
+  const rows = list.length
+    ? list.map(taskRow).join("")
+    : '<div class="empty">אין משימות. הקש + להוספה.</div>';
+  return filterChips() +
+    `<section class="card"><div class="section-title">כל המשימות (${list.length})</div>${rows}</section>` +
+    (TOKEN ? "" : viewerBanner());
+}
+
+function filterChips() {
+  const opt = (k, lbl) => `<button class="chip ${FILTER === k ? "active" : ""}" onclick="setFilter('${k}')">${lbl}</button>`;
+  return `<div class="chips">${opt("all", "הכל")}${opt("work", "עבודה")}${opt("personal", "אישי")}</div>`;
+}
+function viewerBanner() {
+  return `<div class="banner"><b>מצב צפייה בלבד</b>כדי להוסיף/לערוך/לסמן בוצע — פתח ⚙️ והדבק טוקן GitHub.</div>`;
+}
+function barHtml(label, used, cap, color) {
+  const ratio = cap > 0 ? Math.min(1, used / cap) : 0;
+  const over = used > cap + 1e-6;
+  const fill = over ? "#D97706" : color;
+  return `<div class="bar-row"><span class="bar-cat">${label}</span>` +
+    `<div class="bar-track"><div class="bar-fill" style="width:${(ratio*100).toFixed(1)}%;background:${fill}"></div></div>` +
+    `<span class="bar-text">${fmtNum(used)}/${fmtNum(cap)}ש</span></div>`;
+}
+function slotRow(s, t, overdue) {
+  const done = !!s.completed;
+  let cls = "row " + esc(t.category);
+  if (done) cls += " done"; else if (overdue) cls += " overdue";
+  let meta = "";
+  if (done) meta = '<div class="row-meta" style="color:#7C3AED">✔ בוצע</div>';
+  else if (overdue) {
+    const d = Math.round((new Date(todayIso()) - new Date(s.start_date)) / 86400000);
+    meta = `<div class="row-meta" style="color:#D97706">⚠ באיחור ${d > 0 ? d + " ימים" : ""}</div>`;
+  }
+  const check = TOKEN
+    ? `<button class="check ${done ? "on" : ""}" onclick="toggleDone('${s.id}')">${done ? "✓" : ""}</button>`
+    : "";
+  return `<div class="${cls}">${check}<div class="row-main">` +
+    `<div class="row-name ${done ? "struck" : ""}"><span class="badge ${esc(t.category)}">${esc(catLabel(t.category))}</span>${esc(t.name)}</div>` +
+    `${meta}</div><div class="row-meta" style="white-space:nowrap">${fmtNum(s.hours)}ש</div></div>`;
+}
+function taskRow(t) {
+  const ctrl = TOKEN
+    ? `<button class="mini" onclick='openTaskForm(${JSON.stringify(t.id)})'>✏️</button>` +
+      `<button class="mini danger" onclick='deleteTask(${JSON.stringify(t.id)})'>🗑</button>`
+    : "";
+  const wu = t.work_unit_hours ? ` · יח׳ ${fmtNum(t.work_unit_hours)}ש` : "";
+  const ed = t.end_date ? ` · עד ${esc(t.end_date)}` : "";
+  return `<div class="row ${esc(t.category)}"><div class="row-main">` +
+    `<div class="row-name"><span class="badge ${esc(t.category)}">${esc(catLabel(t.category))}</span>${esc(t.name)}</div>` +
+    `<div class="row-meta">${fmtNum(t.estimated_hours)}ש הערכה${wu}${ed}</div></div>${ctrl}</div>`;
+}
+
+/* ---------- modals ---------- */
+function closeModal() { document.getElementById("modal-root").innerHTML = ""; }
+function openModal(html) {
+  document.getElementById("modal-root").innerHTML =
+    `<div class="modal-back" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`;
+}
+let formCat = "work";
+function openTaskForm(id) {
+  if (!TOKEN) { openSettings("צריך טוקן כדי להוסיף משימה."); return; }
+  const t = id ? taskById(id) : null;
+  formCat = t ? t.category : "work";
+  openModal(`
+    <h2>${id ? "עריכת משימה" : "משימה חדשה"}</h2>
+    <label class="fld">שם המשימה
+      <input id="f-name" type="text" value="${t ? esc(t.name) : ""}" placeholder="לדוגמה: להכין מצגת">
+    </label>
+    <label class="fld">קטגוריה
+      <div class="seg" id="f-cat">
+        <button type="button" class="${formCat==="work"?"on":""}" data-c="work">עבודה</button>
+        <button type="button" class="${formCat==="personal"?"on":""}" data-c="personal">אישי</button>
+      </div>
+    </label>
+    <label class="fld">הערכת שעות
+      <input id="f-hours" type="number" inputmode="decimal" min="0" step="0.5" value="${t ? fmtNum(t.estimated_hours) : "1"}">
+    </label>
+    <label class="fld">יחידת עבודה (שעות, רשות)
+      <input id="f-unit" type="number" inputmode="decimal" min="0" step="0.5" value="${t && t.work_unit_hours ? fmtNum(t.work_unit_hours) : ""}" placeholder="ברירת מחדל לפי קטגוריה">
+    </label>
+    <label class="fld">תאריך יעד (רשות)
+      <input id="f-end" type="date" value="${t && t.end_date ? esc(t.end_date) : ""}">
+    </label>
+    <div class="actions">
+      <button class="btn ghost" onclick="closeModal()">ביטול</button>
+      <button class="btn primary" id="f-save">שמירה</button>
+    </div>
+  `);
+  document.querySelectorAll("#f-cat button").forEach((b) =>
+    b.onclick = () => { formCat = b.dataset.c; document.querySelectorAll("#f-cat button").forEach((x) => x.classList.toggle("on", x === b)); });
+  document.getElementById("f-save").onclick = () => {
+    const name = document.getElementById("f-name").value.trim();
+    if (!name) { toast("צריך שם משימה"); return; }
+    saveTask({
+      name, category: formCat,
+      estimated_hours: document.getElementById("f-hours").value,
+      work_unit_hours: document.getElementById("f-unit").value,
+      end_date: document.getElementById("f-end").value,
+    }, id);
+  };
+}
+function openSettings(note) {
+  openModal(`
+    <h2>הגדרות</h2>
+    ${note ? `<div class="banner">${esc(note)}</div>` : ""}
+    <label class="fld">GitHub Token (נשמר במכשיר בלבד)
+      <input id="s-token" type="password" value="${esc(TOKEN)}" placeholder="ghp_… / github_pat_…" autocomplete="off">
+    </label>
+    <div class="hint">
+      הריפו: <b>${esc(REPO.owner)}/${esc(REPO.repo)}</b><br>
+      צריך טוקן עם הרשאת <b>Contents: Read and write</b> לריפו הזה בלבד.
+      <a href="https://github.com/settings/tokens?type=beta" target="_blank">צור טוקן fine-grained ›</a><br>
+      בלי טוקן הכלי במצב צפייה בלבד.
+    </div>
+    <div class="actions" style="margin-top:14px">
+      ${TOKEN ? '<button class="btn ghost" onclick="clearToken()">נתק</button>' : ""}
+      <button class="btn primary" id="s-save">שמירה</button>
+    </div>
+  `);
+  document.getElementById("s-save").onclick = () => {
+    TOKEN = document.getElementById("s-token").value.trim();
+    if (TOKEN) localStorage.setItem("gh_token", TOKEN); else localStorage.removeItem("gh_token");
+    closeModal(); toast(TOKEN ? "נשמר. אפשר לערוך עכשיו." : "הטוקן הוסר.");
+    loadAll();
+  };
+}
+function clearToken() {
+  TOKEN = ""; localStorage.removeItem("gh_token"); closeModal();
+  toast("נותקת. מצב צפייה בלבד."); loadAll();
+}
+
+/* ---------- events ---------- */
+function setFilter(k) { FILTER = k; localStorage.setItem("filter", k); render(); }
+document.querySelectorAll("nav.tabs button").forEach((b) =>
+  b.onclick = () => {
+    TAB = b.dataset.tab;
+    document.querySelectorAll("nav.tabs button").forEach((x) => x.classList.toggle("active", x === b));
+    render();
+  });
+document.getElementById("fab").onclick = () => openTaskForm(null);
+document.getElementById("btn-settings").onclick = () => openSettings("");
+
+loadAll();
+setInterval(() => { if (!document.getElementById("modal-root").innerHTML) loadAll(); }, 60000);
+</script>
+</body>
+</html>
