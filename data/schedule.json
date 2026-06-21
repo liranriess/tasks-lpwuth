@@ -36,8 +36,8 @@
     "start_date": "2026-06-03",
     "hours": 0.5,
     "completed": true,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:27",
+    "deleted": true
   },
   {
     "id": "2d90b424d3ca",
@@ -56,8 +56,8 @@
     "start_date": "2026-06-03",
     "hours": 0.5,
     "completed": true,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:27",
+    "deleted": true
   },
   {
     "id": "35fb9d02f32d",
@@ -66,8 +66,8 @@
     "start_date": "2026-06-04",
     "hours": 0.5,
     "completed": true,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:27",
+    "deleted": true
   },
   {
     "id": "38e5c824264a",
@@ -146,8 +146,8 @@
     "start_date": "2026-06-04",
     "hours": 0.5,
     "completed": true,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:27",
+    "deleted": true
   },
   {
     "id": "a5bf30db9bda",
@@ -156,8 +156,8 @@
     "start_date": "2026-06-04",
     "hours": 0.5,
     "completed": true,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:27",
+    "deleted": true
   },
   {
     "id": "a816c24cc1d1",
@@ -196,8 +196,8 @@
     "start_date": "2026-06-03",
     "hours": 0.5,
     "completed": true,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:27",
+    "deleted": true
   },
   {
     "id": "d01874969db2",
