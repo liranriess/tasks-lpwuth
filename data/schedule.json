@@ -6,8 +6,8 @@
     "start_date": "2026-06-07",
     "hours": 0.1,
     "completed": true,
-    "updated_at": "2026-06-22T01:03:32",
-    "deleted": false
+    "updated_at": "2026-06-22T01:04:49",
+    "deleted": true
   },
   {
     "id": "1f6a273247e0",
@@ -96,8 +96,8 @@
     "start_date": "2026-06-08",
     "hours": 0.5,
     "completed": false,
-    "updated_at": "2026-06-22T00:19:51",
-    "deleted": false
+    "updated_at": "2026-06-22T01:04:49",
+    "deleted": true
   },
   {
     "id": "604750ff730a",
