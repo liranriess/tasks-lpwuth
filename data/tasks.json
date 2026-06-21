@@ -51,8 +51,8 @@
     "work_unit_hours": 0.5,
     "end_date": "2026-06-09",
     "created_at": "2026-06-03T01:08:23",
-    "updated_at": "2026-06-03T01:08:23",
-    "deleted": false
+    "updated_at": "2026-06-22T01:06:26",
+    "deleted": true
   },
   {
     "id": "ec182deec313",
