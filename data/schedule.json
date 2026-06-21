@@ -135,8 +135,8 @@
     "slot_index": 0,
     "start_date": "2026-06-07",
     "hours": 0.5,
-    "completed": false,
-    "updated_at": "2026-06-22T01:03:43",
+    "completed": true,
+    "updated_at": "2026-06-22T01:03:49",
     "deleted": false
   },
   {
