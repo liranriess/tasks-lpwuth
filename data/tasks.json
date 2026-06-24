@@ -108,5 +108,16 @@
     "estimated_hours": 0.2,
     "work_unit_hours": null,
     "end_date": "2026-06-25"
+  },
+  {
+    "id": "edb996427c3a",
+    "created_at": "2026-06-24T21:37:52",
+    "updated_at": "2026-06-24T21:37:52",
+    "deleted": false,
+    "name": "לדבר עם שירות מכונת הכביסה",
+    "category": "personal",
+    "estimated_hours": 0.2,
+    "work_unit_hours": null,
+    "end_date": "2026-06-25"
   }
 ]
